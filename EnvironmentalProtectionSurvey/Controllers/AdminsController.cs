@@ -59,6 +59,20 @@ namespace EnvironmentalProtectionSurvey.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> Admin(string? asearch)
+        {
+            var model = await _context.Users.Where(u => u.Active == 1 && u.Role == "Admin").ToListAsync();
+            if (asearch == null)
+            {
+                return View(model);
+            }
+            else
+            {
+                var model1 = model!.Where(m => m.UserName!.Contains(asearch!) || m.Email!.Contains(asearch!) || m.NumberCode!.Contains(asearch!));
+                return View(model1);
+            }
+        }
+
         public IActionResult AllUser()
         {
             if (!IsAdmin())
