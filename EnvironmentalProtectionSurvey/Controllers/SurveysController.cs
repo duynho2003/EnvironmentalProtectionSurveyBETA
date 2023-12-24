@@ -90,7 +90,8 @@ namespace EnvironmentalProtectionSurvey.Controllers
             {
                 _context.Add(survey);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                // Display success alert using SweetAlert2
+                return Json(new { success = true });
             }
             return View(survey);
         }

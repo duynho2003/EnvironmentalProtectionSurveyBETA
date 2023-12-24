@@ -62,7 +62,8 @@ namespace EnvironmentalProtectionSurvey.Controllers
             {
                 _context.Add(questionContest);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                // Display success alert using SweetAlert2
+                return Json(new { success = true });
             }
             ViewData["ContestId"] = new SelectList(_context.Contests, "Id", "Title", questionContest.ContestId);
             return View(questionContest);
