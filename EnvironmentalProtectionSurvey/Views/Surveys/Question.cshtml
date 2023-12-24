@@ -1,0 +1,35 @@
+﻿@model EnvironmentalProtectionSurvey.Models.QuestionOptionsViewModel
+
+@{
+    ViewData["Title"] = "Question";
+}
+<nav class="navbar default-layout">
+    <div class="navbar-menu-wrapper d-flex align-items-top">
+        <h1>Info Question</h1>
+    </div>
+</nav>
+@foreach (var question in Model.Questions)
+{
+    <div>
+        <h4>Question: @question.Title</h4>
+        <hr />
+        <div>
+            <h3>Options:</h3>
+            <ul>
+                @foreach (var option in question.Options)
+                {
+                    <li>@option.Answer</li>
+                }
+            </ul>
+        </div>
+        <dl class="row">
+            <dt class="col-sm-2">Correct Answer:</dt>
+            <dd class="col-sm-10">@question.CorrectAnswer</dd>
+        </dl>
+    </div>
+}
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Questions?.FirstOrDefault()?.Id" class="btn btn-primary me-2">Edit</a>
+    <a asp-action="Index" class="btn btn-light">Back to List</a>
+</div>
