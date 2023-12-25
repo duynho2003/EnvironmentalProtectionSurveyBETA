@@ -209,6 +209,15 @@ public partial class SurveyProjectContext : DbContext
 
             entity.Property(e => e.CorrectAnswer).HasMaxLength(255);
 
+            // Sử dụng một chuỗi để lưu trữ các lựa chọn, phân tách bằng dấu phẩy
+            entity.Property(e => e.AnswerOptions)
+            .IsRequired()
+            .HasMaxLength(1000)
+             .HasConversion(
+                v => string.Join(',', v),
+                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
+            );
+
             entity.HasOne(d => d.Contest).WithMany(p => p.QuestionContests)
                 .HasForeignKey(d => d.ContestId)
                 .OnDelete(DeleteBehavior.Cascade)
