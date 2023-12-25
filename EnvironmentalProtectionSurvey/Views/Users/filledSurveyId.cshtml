@@ -27,7 +27,7 @@
                    .Where(fs => fs.UserId == Model.UserId && fs.SurveyId == Model.SurveyId && fs.Option.QuestionId == question.Id)
                    .Select(fs => fs.Option))
                     {
-                        @filledSurveyOption.Answer
+                        @* @filledSurveyOption.Answer *@
                         <br />
                     }
                 </td>

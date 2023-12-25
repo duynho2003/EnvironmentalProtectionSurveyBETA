@@ -12,10 +12,10 @@
 @foreach (var question in Model.Questions)
 {
     <div>
-        <h4>Question: @question.Title</h4>
-        <hr />
+        <h2 style="color:red">Question: @question.Title</h2>
+        
         <div>
-            <h3>Options:</h3>
+            <h4>Options:</h4>
             <ul>
                 @foreach (var option in question.Options)
                 {
@@ -25,7 +25,7 @@
         </div>
         <dl class="row">
             <dt class="col-sm-2">Correct Answer:</dt>
-            <dd class="col-sm-10">@question.CorrectAnswer</dd>
+            <dd class="col-sm-10" style="font-weight:bold; color:green">@question.CorrectAnswer</dd>
         </dl>
     </div>
 }

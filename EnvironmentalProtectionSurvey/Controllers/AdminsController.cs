@@ -62,6 +62,10 @@ namespace EnvironmentalProtectionSurvey.Controllers
         public async Task<IActionResult> Admin(string? asearch)
         {
             var model = await _context.Users.Where(u => u.Active == 1 && u.Role == "Admin").ToListAsync();
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Login", "Users");
+            }
             if (asearch == null)
             {
                 return View(model);
@@ -73,14 +77,22 @@ namespace EnvironmentalProtectionSurvey.Controllers
             }
         }
 
-        public IActionResult AllUser()
+        public IActionResult AllUser(string? usearch)
         {
+            var model = _context.Users.Where(u => u.Active == 1).ToList();
             if (!IsAdmin())
             {
                 return RedirectToAction("Login", "Users");
             }
-            var model = _context.Users.Where(u => u.Active == 1).ToList();
-            return View(model);
+            if (usearch == null)
+            {
+                return View(model);
+            }
+            else
+            {
+                var model1 = model!.Where(m => m.UserName!.Contains(usearch!) || m.Email!.Contains(usearch!) || m.NumberCode!.Contains(usearch!));
+                return View(model1);
+            }
         }
 
 
