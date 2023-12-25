@@ -152,9 +152,6 @@ public partial class Project2Context : DbContext
 
                 entity.ToTable("Option");
 
-                entity.Property(e => e.Answer)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
                 entity.Property(e => e.Title)
                     .HasMaxLength(255)
                     .IsUnicode(false);
