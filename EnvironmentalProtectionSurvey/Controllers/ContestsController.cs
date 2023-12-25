@@ -212,6 +212,9 @@ namespace EnvironmentalProtectionSurvey.Controllers
         [HttpPost]
         public IActionResult TakeContest(int id, Dictionary<int, string[]> selectedOptions)
         {
+            var username = HttpContext.Session.GetString("username");
+            var user = _context.Users.FirstOrDefault(u => u.UserName == username);
+
             var contest = _context.Contests
                 .Include(c => c.QuestionContests)
                 .FirstOrDefault(c => c.Id == id);
@@ -257,6 +260,7 @@ namespace EnvironmentalProtectionSurvey.Controllers
                 var filledcontest = new Winner
                 {
                     ContestId = contest.Id,
+                    UserId = user.Id
                 };
                 _context.Winners.Add(filledcontest);
                 _context.SaveChanges();

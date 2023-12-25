@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EnvironmentalProtectionSurvey.Models;
 
-namespace BE.Controllers
+namespace EnvironmentalProtectionSurvey.Controllers
 {
     public class OptionsController : Controller
     {
@@ -56,7 +56,7 @@ namespace BE.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Answer,QuestionId")] Option option)
+        public async Task<IActionResult> Create([Bind("Id,Title,QuestionId")] Option option)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace BE.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Answer,QuestionId")] Option option)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,QuestionId")] Option option)
         {
             if (id != option.Id)
             {
@@ -155,14 +155,14 @@ namespace BE.Controllers
             {
                 _context.Options.Remove(option);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool OptionExists(int id)
         {
-            return (_context.Options?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Options?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

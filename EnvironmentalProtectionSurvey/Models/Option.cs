@@ -9,8 +9,6 @@ public partial class Option
 
     public string? Title { get; set; }
 
-    public string? Answer { get; set; }
-
     public int? QuestionId { get; set; }
 
     public virtual ICollection<FilledSurvey> FilledSurveys { get; set; } = new List<FilledSurvey>();

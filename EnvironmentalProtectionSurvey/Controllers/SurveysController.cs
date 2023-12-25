@@ -187,7 +187,6 @@ namespace EnvironmentalProtectionSurvey.Controllers
                         existingQuestion.Options.Add(existingOption);
                     }
                     existingOption.Title = option.Title;
-                    existingOption.Answer = option.Answer;
                 }
             }
 
