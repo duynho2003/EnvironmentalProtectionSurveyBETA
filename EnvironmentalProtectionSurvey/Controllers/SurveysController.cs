@@ -164,6 +164,10 @@ namespace EnvironmentalProtectionSurvey.Controllers
 
             // Update the survey details
             existingSurvey.Title = survey.Title;
+            existingSurvey.UserType = survey.UserType;
+            existingSurvey.UserPost = survey.UserPost;
+            existingSurvey.CreatedAt = DateTime.Now;
+            existingSurvey.EndAt = survey.EndAt;
 
             // Update the questions
             foreach (var question in questions)
