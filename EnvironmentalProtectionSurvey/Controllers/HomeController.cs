@@ -106,6 +106,69 @@ namespace EnvironmentalProtectionSurvey.Controllers
             ViewBag.participated = "You have participated in this survey";
             return View();
         }
+        
+        public IActionResult SurveyBoard()
+        {
+            //lay ra user đăng nhâp 
+            var username = HttpContext.Session.GetString("username");
+            var user = _context.Users.FirstOrDefault(u => u.UserName == username);
+            var news = _context.News.ToList();
+            List<Survey> survey;
+            if (user == null)
+            {
+                survey = _context.Surveys.Where(s => s.IsVisible == null).Include(s => s.Questions).ThenInclude(q => q.Options).ToList();
+
+            }
+            else if (user.Role == "Admin")
+            {
+                survey = _context.Surveys.Where(s => s.IsVisible == null).Include(s => s.Questions).ThenInclude(q => q.Options).ToList();
+
+            }
+            else
+            {
+                survey = _context.Surveys.Where(s => s.IsVisible == null).Include(s => s.Questions).ThenInclude(q => q.Options).Where(s => s.UserType == user!.Role || s.UserType == "All").ToList();
+
+            }
+            List<int> studentCounts = new List<int>();
+            List<int> teacherCounts = new List<int>();
+
+            foreach (var s in survey)
+            {
+                var studentCount = _context.Users
+                    .Join(_context.FilledSurveys,
+                        user => user.Id,
+                        filledSurvey => filledSurvey.UserId,
+                        (user, filledSurvey) => new { User = user, FilledSurvey = filledSurvey })
+                    .Where(joinResult => joinResult.User.Role == "Student" && joinResult.FilledSurvey.SurveyId == s.Id)
+                    .GroupBy(joinResult => joinResult.User.Id)
+                    .Count();
+
+                var teacherCount = _context.Users
+                    .Join(_context.FilledSurveys,
+                        user => user.Id,
+                        filledSurvey => filledSurvey.UserId,
+                        (user, filledSurvey) => new { User = user, FilledSurvey = filledSurvey })
+                    .Where(joinResult => joinResult.User.Role == "Teacher" && joinResult.FilledSurvey.SurveyId == s.Id)
+                    .GroupBy(joinResult => joinResult.User.Id)
+                    .Count();
+
+                // Add the counts to the lists
+                studentCounts.Add(studentCount);
+                teacherCounts.Add(teacherCount);
+            }
+
+            // Pass the lists to the view using ViewBag
+            ViewBag.StudentParticipantCounts = studentCounts;
+            ViewBag.TeacherParticipantCounts = teacherCounts;
+
+            // Create the view model
+            var viewModel = new NewsSurveyViewModel
+            {
+                NewsList = news,
+                SurveyList = survey
+            };
+            return View(viewModel);
+        }
 
 
 
