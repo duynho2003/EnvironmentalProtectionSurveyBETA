@@ -5,6 +5,7 @@
     {
         public IEnumerable<News> NewsList { get; set; }
         public IEnumerable<Survey> SurveyList { get; set; }
+        public IEnumerable<Contest> ContestList { get; set; }
     }
 
 }

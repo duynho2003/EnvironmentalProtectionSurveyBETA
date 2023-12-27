@@ -363,7 +363,7 @@
                         </a>
                         <div class="collapse" id="news">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link" asp-area="" asp-controller="" asp-action="">News</a></li>
+                                <li class="nav-item"> <a class="nav-link" asp-area="" asp-controller="News" asp-action="Index">News</a></li>
                             </ul>
                         </div>
                     </li>
@@ -428,5 +428,20 @@
     <script src="~/assets/js/sweetalert2@11.js"></script>
     <!-- End custom js for this page-->
     @await RenderSectionAsync("Scripts", required: false)
+    <!--script textarea-->
+    <!-- TinyMCE -->
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea#tiny',
+                    plugins: [
+                'a11ychecker', 'advlist', 'advcode', 'advtable', 'autolink', 'checklist', 'export',
+                'lists', 'link', 'image', 'charmap', 'preview', 'anchor', 'searchreplace', 'visualblocks',
+                'powerpaste', 'fullscreen', 'formatpainter', 'insertdatetime', 'media', 'table', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | a11ycheck casechange blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify |' +
+                'bullist numlist checklist outdent indent | removeformat | code table help'
+        })
+    </script>
 </body>
 </html>

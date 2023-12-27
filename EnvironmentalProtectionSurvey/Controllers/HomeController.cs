@@ -113,6 +113,7 @@ namespace EnvironmentalProtectionSurvey.Controllers
             var username = HttpContext.Session.GetString("username");
             var user = _context.Users.FirstOrDefault(u => u.UserName == username);
             var news = _context.News.ToList();
+            var contest = _context.Contests.ToList();
             List<Survey> survey;
             if (user == null)
             {
@@ -165,7 +166,9 @@ namespace EnvironmentalProtectionSurvey.Controllers
             var viewModel = new NewsSurveyViewModel
             {
                 NewsList = news,
-                SurveyList = survey
+                SurveyList = survey,
+                ContestList = contest
+                
             };
             return View(viewModel);
         }
