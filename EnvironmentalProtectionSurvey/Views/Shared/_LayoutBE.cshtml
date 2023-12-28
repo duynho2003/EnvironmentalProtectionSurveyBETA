@@ -379,6 +379,18 @@
                             </ul>
                         </div>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#supports" aria-expanded="false" aria-controls="supports">
+                            <i class="menu-icon mdi mdi-information-outline"></i>
+                            <span class="menu-title">Supports</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="supports">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item"> <a class="nav-link" asp-area="" asp-controller="Supports" asp-action="Index">Supports</a></li>
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
             </nav>
             <!-- partial -->
@@ -426,6 +438,9 @@
     <script src="~/assets/js/dashboard.js"></script>
     <script src="~/assets/js/Chart.roundedBarCharts.js"></script>
     <script src="~/assets/js/sweetalert2@11.js"></script>
+    <!--datatable scripts-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.13.8/af-2.6.0/datatables.min.css">
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.13.8/af-2.6.0/datatables.min.js"></script>
     <!-- End custom js for this page-->
     @await RenderSectionAsync("Scripts", required: false)
     <!--script textarea-->
