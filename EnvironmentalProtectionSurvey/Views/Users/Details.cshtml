@@ -21,6 +21,7 @@
 <div class="container-xl px-4 mt-4">
     <!-- Account page navigation-->
     <nav class="nav nav-borders">
+        <a class="nav-link active ms-0" asp-action="Index" asp-controller="Home">Home</a>
         <a class="nav-link active ms-0" asp-action="Details" asp-controller="Users">Profile</a>
         <a class="nav-link active ms-0" asp-action="SurveyParticipationHistory" asp-asp-controller="Users">Survey Participated</a>
     </nav>
@@ -103,7 +104,7 @@
                             <!-- Form Group (first name)-->
                             <div class="col-md-6">
                                 <label asp-for="Password" class="small mb-1" for="inputFirstName">Current Password</label>
-                                <input name="password" class="form-control" id="inputFirstName" type="text" placeholder="Enter your current password" required>
+                                <input name="password" class="form-control" id="inputFirstName" type="password" placeholder="Enter your current password" required>
                             </div>
                             <p style="color: red">@ViewBag.failsPass</p>
                             <p style="color:yellow">@ViewBag.updatedPass</p>
@@ -114,9 +115,16 @@
                             <!-- Form Group (organization name)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputOrgName">New Password</label>
-                                <input name="newPassword" class="form-control" id="inputOrgName" type="text" placeholder="Enter your new password" required>
+                                <input name="newPassword" class="form-control" id="inputOrgName" type="password" placeholder="Enter your new password" required>
                                 <span asp-validation-for="Specification" class="text-danger"></span>
                                 <p style="color:red">@ViewBag.err</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputOrgName">Confirm New Password</label>
+                                <input name="confirmNewPassword" class="form-control" id="inputOrgName" type="password" placeholder="Enter your new password" required>
+                                <span asp-validation-for="Specification" class="text-danger"></span>
+                                <p style="color:red">@ViewBag.confirmPassword</p>
                             </div>
 
                         </div>

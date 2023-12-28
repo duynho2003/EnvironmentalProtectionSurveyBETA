@@ -486,7 +486,7 @@ namespace EnvironmentalProtectionSurvey.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Details(User user, string btn, string password, string newPassword)
+        public async Task<IActionResult> Details(User user, string btn, string password, string newPassword, string confirmNewPassword)
         {
 
             if (btn == "Save")
@@ -541,16 +541,28 @@ namespace EnvironmentalProtectionSurvey.Controllers
                     {
                         if (IsPasswordValid(newPassword))
                         {
-                            model.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
-                            ViewBag.updatedPass = "Password has been updated";
-                            _context.SaveChanges();
-                            return View(user);
+                            if (newPassword != password)
+                            {
+                                if (newPassword == confirmNewPassword)
+                                {
+                                    model.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+                                    ViewBag.updatedPass = "Password has been updated";
+                                    await _context.SaveChangesAsync();
+                                    return View(user);
+                                }
+                                else
+                                {
+                                    ViewBag.confirmPassword = "New password and confirm password must match";
+                                }
+                            }
+                            else
+                            {
+                                ViewBag.err = "New password must be different from the current password";
+                            }
                         }
                         else
                         {
                             ViewBag.err = "Password must be at least 8 characters long and contain at least one uppercase letter, one digit, and one special character";
-                            return View(user);
-
                         }
                     }
                     else
@@ -559,7 +571,6 @@ namespace EnvironmentalProtectionSurvey.Controllers
                     }
                 }
             }
-
             return View(user);
         }
 
@@ -670,41 +681,41 @@ namespace EnvironmentalProtectionSurvey.Controllers
         //    return NotFound();
         //}
 
-        public IActionResult DetailsSurveyParticipationHistory(int surveyid)
-        {
-            var username = HttpContext.Session.GetString("username");
+        //public IActionResult DetailsSurveyParticipationHistory(int surveyid)
+        //{
+        //    var username = HttpContext.Session.GetString("username");
 
-            if (username != null)
-            {
-                var user = _context.Users.FirstOrDefault(u => u.UserName == username);
+        //    if (username != null)
+        //    {
+        //        var user = _context.Users.FirstOrDefault(u => u.UserName == username);
 
-                if (user != null)
-                {
+        //        if (user != null)
+        //        {
 
-                    //var filledSurveyDetails = _context.FilledSurveyDetails
-                    //    .Where(fs => fs.UserId == user.Id && fs.Id == surveyid)
-                    //    //.DistinctBy(fs => fs.QuestionTitle)  // Group by QuestionTitle
-                    //    //.Select(fs => new List<dynamic>{ fs.QuestionTitle!, fs.OptionTitle! })   // Take the first item from each group (remove duplicates)
-                    //    .ToList();
+        //            //var filledSurveyDetails = _context.FilledSurveyDetails
+        //            //    .Where(fs => fs.UserId == user.Id && fs.Id == surveyid)
+        //            //    //.DistinctBy(fs => fs.QuestionTitle)  // Group by QuestionTitle
+        //            //    //.Select(fs => new List<dynamic>{ fs.QuestionTitle!, fs.OptionTitle! })   // Take the first item from each group (remove duplicates)
+        //            //    .ToList();
 
 
-               //     var filledSurveyDetails = _context.FilledSurveyDetails
-               //.Where(fs => fs.UserId == user.Id && fs.Id == surveyid)
-               //.GroupBy(fs => new { fs.QuestionTitle, fs.OptionTitle })  // Group by QuestionTitle and OptionTitle
-               //.Select(group => group.First())   // Take the first item from each group (remove duplicates)
-               //.ToList();
+        //            var filledSurveyDetails = _context.FilledSurveyDetails
+        //       .Where(fs => fs.UserId == user.Id && fs.Id == surveyid)
+        //       .GroupBy(fs => new { fs.QuestionTitle, fs.OptionTitle })  // Group by QuestionTitle and OptionTitle
+        //       .Select(group => group.First())   // Take the first item from each group (remove duplicates)
+        //       .ToList();
 
-                    //if (filledSurveyDetails == null)
-                    //{
-                    //    return NotFound();
-                    //}
+        //            if (filledSurveyDetails == null)
+        //            {
+        //                return NotFound();
+        //            }
 
-                    //return View(filledSurveyDetails);
-                }
-            }
+        //            return View(filledSurveyDetails);
+        //        }
+        //    }
 
-            return NotFound();
-        }
+        //    return NotFound();
+        //}
 
 
         private bool UserExists(int id)

@@ -55,7 +55,13 @@ namespace EnvironmentalProtectionSurvey.Controllers
             {
                 return RedirectToAction("Login", "Users");
             }
-            var model =  _context.Users.Where(u=>u.Active == 1).ToList();
+            var userCount = _context.Users.Count();
+            var surveyCount = _context.Surveys.Count();
+            var questionsCount = _context.Questions.Count();
+            var contestsCount = _context.Contests.Count();
+            var winnerCount = _context.Winners.Count();
+            var supportsCount = _context.Supports.Count();
+            var model = new IndexViewModel { UserCount = userCount, SurveyCount = surveyCount, QuestionsCount = questionsCount, ContestsCount = contestsCount, WinnerCount = winnerCount, SupportsCount = supportsCount };
             return View(model);
         }
 
