@@ -1,17 +1,60 @@
-﻿<!-- Participated.cshtml -->
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Participated</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Participation Confirmation</title>
     <!-- Add your head content here -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .confirmation-container {
+            max-width: 400px;
+            margin: 100px auto 50px;
+            padding: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .confirmation-message {
+            font-size: 24px;
+            color: #28a745;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .back-to-home {
+            text-align: center;
+        }
+
+            .back-to-home a {
+                text-decoration: none;
+                color: #007bff;
+                font-weight: bold;
+            }
+
+                .back-to-home a:hover {
+                    text-decoration: underline;
+                }
+    </style>
 </head>
 <body>
-    <div>
+    <div class="confirmation-container">
         <!-- Display the participated message -->
-        <center style="margin:100px 0 50px 0; font-size:30px; color:red">@ViewBag.participated</center>
-        <center>
-            @Html.ActionLink("Go To Home", "Index", "Home")
-        </center>
+        <div class="confirmation-message">
+            You have participated in this survey
+        </div>
+
+        <div class="back-to-home">
+            <a asp-controller="Home" asp-action="Index">Back To Home</a>
+        </div>
     </div>
     <!-- Add your body content here -->
 </body>

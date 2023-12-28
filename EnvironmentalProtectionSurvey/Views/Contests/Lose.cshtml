@@ -1,0 +1,40 @@
+﻿@model EnvironmentalProtectionSurvey.Models.Contest
+@{
+    ViewData["Title"] = "Contest Result";
+}
+
+<div class="result-container">
+    <h2>Unfortunately, you did not achieve victory!</h2>
+    <p>Thank you for participating. Please try harder next time!</p>
+
+    <div class="back-to-home">
+        <a asp-action="Index" asp-controller="Home">Back To Home</a>
+    </div>
+</div>
+
+<style>
+    /* Custom CSS for the result page */
+    .result-container {
+        max-width: 600px;
+        margin: 0 auto;
+        margin-top: 50px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .back-to-home {
+        margin-top: 20px;
+    }
+
+        .back-to-home a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+            .back-to-home a:hover {
+                text-decoration: underline;
+            }
+</style>

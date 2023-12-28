@@ -15,7 +15,7 @@
 </p>
 
 <div class="table-responsive mt-1">
-    <table class="table select-table">
+    <table class="table select-table" id="Exampledatatable">
     <thead>
         <tr>
             <th>
@@ -53,3 +53,10 @@
     </tbody>
 </table>
 </div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("#Exampledatatable").DataTable();
+        })
+    </script>
+}

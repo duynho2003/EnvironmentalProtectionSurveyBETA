@@ -1,0 +1,48 @@
+﻿@model EnvironmentalProtectionSurvey.Models.Contest
+@{
+    ViewData["Title"] = "Contest Result";
+}
+
+<div class="result-container">
+    <h2>Congratulations, you have achieved victory!</h2>
+    <p>Congratulations, you have answered all the questions correctly. You were an outstanding winner!</p>
+
+    @*<div class="prize-info">
+    <p>Bạn có thể nhận được giải thưởng tại địa điểm sau: [Địa điểm nhận giải thưởng]</p>
+    </div>*@
+
+    <div class="back-to-home">
+        <a href="/">Back To Home</a>
+    </div>
+</div>
+
+<style>
+    /* Custom CSS for the result page */
+    .result-container {
+        max-width: 600px;
+        margin: 0 auto;
+        margin-top: 50px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .prize-info {
+        margin-top: 20px;
+    }
+
+    .back-to-home {
+        margin-top: 20px;
+    }
+
+        .back-to-home a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+            .back-to-home a:hover {
+                text-decoration: underline;
+            }
+</style>

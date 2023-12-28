@@ -14,7 +14,7 @@
     <a asp-action="Create" class="btn btn-outline-success"><span class="btn-label"><i class="fa fa-plus"></i></span>Create New Options</a>
 </p>
 <div class="table-responsive mt-1">
-    <table class="table select-table">
+    <table class="table select-table" id="Exampledatatable">
     <thead>
         <tr>
             <th>
@@ -44,3 +44,10 @@
     </tbody>
 </table>
 </div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("#Exampledatatable").DataTable();
+        })
+    </script>
+}

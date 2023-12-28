@@ -1,11 +1,11 @@
-﻿    @model EnvironmentalProtectionSurvey.Models.Survey
+﻿@model EnvironmentalProtectionSurvey.Models.Survey
 
-    @{
-        ViewData["Title"] = "Survey Detail";
-    }
-    <head>
-        <link href="~/survey/takesurvey.css" rel="stylesheet" />
-        <style>
+@{
+    ViewData["Title"] = "Survey Detail";
+}
+<head>
+    <link href="~/survey/takesurvey.css" rel="stylesheet" />
+    <style>
         body {
             font-family: 'Open Sans', sans-serif;
             background-color: #f5f5f5; /* Light off-white background */
@@ -42,41 +42,41 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        </style>
-    </head>
-    <div class="formbold-main-wrapper">
-      <div class="formbold-form-wrapper">
-            <form asp-action="TakeSurvey" asp-controller="Home"  method="POST">
-             <input type="hidden" name="id" value="@Model.Id"/>
+    </style>
+</head>
+<div class="formbold-main-wrapper">
+    <div class="formbold-form-wrapper">
+        <form asp-action="TakeSurvey" asp-controller="Home" method="POST">
+            <input type="hidden" name="id" value="@Model.Id" />
             <label for="qusOne" class="formbold-form-label">
                 <center>@Model.Title</center>
             </label>
 
-                <div class="formbold-radio-flex">
+            <div class="formbold-radio-flex">
                 @{
                     int i = 1;
                 }
-                    @foreach (var question in Model.Questions)
-                    {
-                       <h4 style="font-size:17px">@i. @question.Title</h4>
-                         i++; 
-                        
-                        foreach (var option in question.Options)
-                        {
-                            <label class="formbold-checkbox-label">
-                                <input class="formbold-input-checkbox"
-                                       type="checkbox"
-                                       name="selectedOptionIds"
-                                       value="@option.Id"
-                                       id="@($"qus{question.Id}_{option.Id}")" />
-                                @option.Title
-                                <span class="formbold-checkbox-checkmark"></span>
-                            </label>
-                        }
-                    }
-                </div>
+                @foreach (var question in Model.Questions)
+                {
+                    <h4 style="font-size:17px">@i. @question.Title</h4>
+                    i++;
 
-          <button class="formbold-btn">Send Feedback</button>
+                    foreach (var option in question.Options)
+                    {
+                        <label class="formbold-checkbox-label">
+                            <input class="formbold-input-checkbox"
+                                   type="checkbox"
+                                   name="selectedOptionIds"
+                                   value="@option.Id"
+                                   id="@($"qus{question.Id}_{option.Id}")" />
+                            @option.Title
+                            <span class="formbold-checkbox-checkmark"></span>
+                        </label>
+                    }
+                }
+            </div>
+
+            <button class="formbold-btn">Send Feedback</button>
         </form>
-      </div>
     </div>
+</div>

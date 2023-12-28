@@ -14,7 +14,7 @@
     <a asp-action="Create" class="btn btn-outline-success"><span class="btn-label"><i class="fa fa-plus"></i></span>Create New FAQS</a>
 </p>
 <div class="table-responsive mt-1">
-    <table class="table select-table">
+    <table class="table select-table" id="Exampledatatable">
         <thead>
             <tr>
                 <th>
@@ -23,7 +23,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Answer)
                 </th>
-                <th></th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -44,27 +44,10 @@
         </tbody>
     </table>
 </div>
-@* @section Scripts {
+@section scripts{
     <script>
-        $(function () {
-            $('.delete-faqs').click(function (event) {
-                event.preventDefault(); // Prevent default link behavior
-
-                var faqsId = $(this).data('id'); // Get survey ID from data attribute
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '/Faqs/Delete/' + faqsId; // Redirect to Delete action
-                    }
-                });
-            });
-        });
+        $(document).ready(function () {
+            $("#Exampledatatable").DataTable();
+        })
     </script>
-} *@
+}

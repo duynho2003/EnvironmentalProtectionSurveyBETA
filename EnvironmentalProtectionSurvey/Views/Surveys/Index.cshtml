@@ -16,7 +16,7 @@
 </p>
 
 <div class="table-responsive mt-1">
-    <table class="table select-table">
+    <table class="table select-table" id="Exampledatatable">
         <thead>
             <tr>
                 <th>
@@ -37,7 +37,9 @@
                 <th>
                     @Html.DisplayNameFor(model => model.EndAt)
                 </th>
-                <th></th>
+                <th>
+                    <label>Action</label>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -72,3 +74,10 @@
         </tbody>
     </table>
 </div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("#Exampledatatable").DataTable();
+        })
+    </script>
+}
