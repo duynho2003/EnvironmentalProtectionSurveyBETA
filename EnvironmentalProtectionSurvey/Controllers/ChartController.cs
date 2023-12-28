@@ -14,11 +14,6 @@ namespace EnvironmentalProtectionSurvey.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
-        {
-            var counts = new { UserCount = _context.Users.Count(x => x.Role == "Staff" || x.Role == "Student"), AdminCount = _context.Users.Count(x => x.Role == "Admin"), PendingCount = _context.Users.Count(y => y.Active == 0), SurveyCount = _context.Surveys.Count(), QuestionCount = _context.Questions.Count() };
-            return View(counts);
-        }
         public IActionResult Charts()
         {
             return View();
@@ -27,8 +22,17 @@ namespace EnvironmentalProtectionSurvey.Controllers
         public List<object> GetList()
         {
             List<object> data = new List<object>();
-            List<string?> labels = _context.Surveys.Select(x => x.Title).ToList();
-            List<int?> totals = _context.Surveys.Select(t => t.UserPost).ToList();
+            // Get survey data from the context
+            var surveys = _context.Surveys.ToList();
+
+            // Group surveys by title and count user posts
+            var groupedSurveys = surveys.GroupBy(x => x.Title)
+                                        .Select(g => new { Title = g.Key, TotalUserPosts = g.Sum(x => x.UserPost) })
+                                        .ToList();
+
+            // Prepare data for the chart
+            List<string?> labels = groupedSurveys.Select(x => x.Title).ToList();
+            List<int?> totals = groupedSurveys.Select(x => x.TotalUserPosts).ToList();
             data.Add(labels);
             data.Add(totals);
             return data;

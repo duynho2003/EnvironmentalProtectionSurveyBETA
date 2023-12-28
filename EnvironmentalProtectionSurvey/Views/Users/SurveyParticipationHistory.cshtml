@@ -4,33 +4,30 @@
     ViewData["Title"] = "Survey Participation History";
 }
 
-<h1>Survey Participation History</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Survey Participation History</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <label>Join At</label>
-            </th>
-            <th>
-                <label>Survey</label>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedAt)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Survey.Title)
-                </td>
-              @*   <td>
-                    <a asp-action="DetailsSurveyParticipationHistory" asp-route-surveyId="@item.Survey.Id">Details</a>
-                </td> *@
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Join At</th>
+                    <th scope="col">Survey</th>
+                    @* <th scope="col">Details</th> *@
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Survey!.Title)</td>
+                        @* <td>
+                    <a asp-action="DetailsSurveyParticipationHistory" asp-route-surveyId="@item.Survey!.Id" class="btn btn-info btn-sm">Details</a>
+                    </td> *@
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

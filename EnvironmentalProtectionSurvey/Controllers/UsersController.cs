@@ -294,92 +294,124 @@ namespace EnvironmentalProtectionSurvey.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SignUp(User user, string confirmPassword)
         {
-            if (ModelState.IsValid)
+
+            //kiểm tra username có tồn tại hay chưa 
+            var username = _context.Users.SingleOrDefault(u => u.UserName == user.UserName);
+            if (user.UserName == null)
             {
-                //kiểm tra username có tồn tại hay chưa 
-                var username = _context.Users.SingleOrDefault(u => u.UserName == user.UserName);
-                if (username != null)
-                {
-                    ViewBag.errUsername = "Username already exists in the system";
-                    return View(user);
-                }
-                //kiểm tra email có tồn tại hay chưa
-                var email = _context.Users.SingleOrDefault(u => u.Email == user.Email);
-                if (email != null)
-                {
-                    ViewBag.errEmail = "Email already exists in the system";
-                    return View(user);
-                }
-
-                if (username == null)
-                {
-                    var token = GenerateToken();
-                    //xác thực mail
-                    user.Token = token;
-                    user.ExpiryTime = DateTime.UtcNow.AddMinutes(15); //Token hết hạn sau 15p
-                    if (user.Password != confirmPassword)
-                    {
-                        ViewBag.confirmPassword = "Password and ConfirmPassword must be the same";
-                        return View(user);
-                    }
-
-                    if (IsPasswordValid(user.Password))
-                    {
-                        // Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
-                        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-                    }
-                    else
-                    {
-                        ViewBag.Password = "Password must be at least 8 characters long and contain at least one uppercase letter, one digit, and one special character.";
-                        return View(user);
-
-                    }
-
-                    // Kiểm tra NumberCode bắt đầu bằng "student" hoặc "teacher"
-                    if (user.NumberCode == null || !(user.NumberCode.StartsWith("student", StringComparison.OrdinalIgnoreCase) || user.NumberCode.StartsWith("teacher", StringComparison.OrdinalIgnoreCase)))
-                    {
-                        ViewBag.errNumberCode = "NumberCode must start with 'student' or 'teacher'";
-                        return View(user);
-                    }
-                    //kiểm tra NumberCode có tồn tại hay chưa 
-                    var numberCode = _context.Users.SingleOrDefault(u => u.NumberCode == user.NumberCode);
-                    if (numberCode != null)
-                    {
-                        ViewBag.errNumberCode = "numberCode already exists in the system";
-                        return View(user);
-                    }
-                    //tự động cài role dựa theo numberCode
-                    if (user.NumberCode.StartsWith("Student", StringComparison.OrdinalIgnoreCase))
-                    {
-                        user.Role = "Student";
-                    }
-                    if (user.NumberCode.StartsWith("Teacher", StringComparison.OrdinalIgnoreCase))
-                    {
-                        user.Role = "Teacher";
-                    }
-
-
-                    //chuyển active = 2 vào trạng thái đợi xác thực mail
-                    user.Active = 2;
-                    _context.Add(user);
-                    await _context.SaveChangesAsync();
-
-                    try
-                    {
-                        //gửi mail xác thực 
-                        // code gửi email
-                        SendVerificationEmail(user.Email, token);
-
-                    }
-                    catch (Exception ex)
-                    {
-                        ViewBag.msg = ex.Message;
-                        return View();
-                    }
-                    TempData["sendMail"] = "Please check your email and verify your account";
-                    return RedirectToAction("Login");
-                }
+                ViewBag.errUsername = "Please enter your username";
+                return View(user);
             }
+
+            if (user.Password == null)
+            {
+                ViewBag.Password = "Please enter your password";
+                return View(user);
+            }
+            if (confirmPassword == null)
+            {
+                ViewBag.confirmPassword = "Please enter your confirm Password";
+                return View(user);
+            }
+
+            if (user.Email == null)
+            {
+                ViewBag.errEmail = "Please enter your email";
+                return View(user);
+            }
+
+
+            if (user.NumberCode == null)
+            {
+                ViewBag.errNumberCode = "Please enter your NumberCode";
+                return View(user);
+            }
+
+
+
+
+            if (username != null)
+            {
+                ViewBag.errUsername = "Username already exists in the system";
+                return View(user);
+            }
+            //kiểm tra email có tồn tại hay chưa
+            var email = _context.Users.SingleOrDefault(u => u.Email == user.Email);
+            if (email != null)
+            {
+                ViewBag.errEmail = "Email already exists in the system";
+                return View(user);
+            }
+
+            if (username == null)
+            {
+                var token = GenerateToken();
+                //xác thực mail
+                user.Token = token;
+                user.ExpiryTime = DateTime.UtcNow.AddMinutes(15); //Token hết hạn sau 15p
+                if (user.Password != confirmPassword)
+                {
+                    ViewBag.confirmPassword = "Password and ConfirmPassword must be the same";
+                    return View(user);
+                }
+
+                if (IsPasswordValid(user.Password))
+                {
+                    // Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
+                    user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                }
+                else
+                {
+                    ViewBag.Password = "Password must be at least 8 characters long and contain at least one uppercase letter, one digit, and one special character.";
+                    return View(user);
+
+                }
+
+                // Kiểm tra NumberCode bắt đầu bằng "student" hoặc "teacher"
+                if (user.NumberCode == null || !(user.NumberCode.StartsWith("student", StringComparison.OrdinalIgnoreCase) || user.NumberCode.StartsWith("teacher", StringComparison.OrdinalIgnoreCase)))
+                {
+                    ViewBag.errNumberCode = "NumberCode must start with 'student' or 'teacher'";
+                    return View(user);
+                }
+                //kiểm tra NumberCode có tồn tại hay chưa 
+                var numberCode = _context.Users.SingleOrDefault(u => u.NumberCode == user.NumberCode);
+                if (numberCode != null)
+                {
+                    ViewBag.errNumberCode = "numberCode already exists in the system";
+                    return View(user);
+                }
+                ////tự động cài role dựa theo numberCode
+                if (user.NumberCode.StartsWith("Student", StringComparison.OrdinalIgnoreCase))
+                {
+                    user.Role = "Student";
+                }
+                if (user.NumberCode.StartsWith("Teacher", StringComparison.OrdinalIgnoreCase))
+                {
+                    user.Role = "Teacher";
+                }
+
+
+                //chuyển active = 2 vào trạng thái đợi xác thực mail
+                user.Active = 2;
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                try
+                {
+                    //gửi mail xác thực 
+                    // code gửi email
+                    SendVerificationEmail(user.Email, token);
+
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.msg = ex.Message;
+                    return View();
+                }
+                TempData["sendMail"] = "Please check your email and verify your account";
+                return RedirectToAction("Login");
+            }
+
             return View(user);
         }
 

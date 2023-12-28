@@ -1,0 +1,51 @@
+﻿@model IEnumerable<EnvironmentalProtectionSurvey.Models.Winner>
+
+@{
+    ViewData["Title"] = "Winner";
+    Layout = "~/Views/Shared/_LayoutBE.cshtml";
+}
+
+<nav class="navbar default-layout">
+    <div class="navbar-menu-wrapper d-flex align-items-top">
+        <h1>Winners</h1>
+    </div>
+</nav>
+<div class="table-responsive mt-1">
+    <table class="table select-table" id="Exampledatatable">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Contest)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.User)
+                </th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Contest.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User.Email)
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-success"><span class="btn-label"><i class="fa fa-info"></i></span>Info</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger"><span class="btn-label"><i class="fa fa-trash"></i>Delete</span></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("#Exampledatatable").DataTable();
+        })
+    </script>
+}
