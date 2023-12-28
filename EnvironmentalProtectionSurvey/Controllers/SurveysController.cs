@@ -153,7 +153,7 @@ namespace EnvironmentalProtectionSurvey.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Survey survey, List<Question> questions)
+        public async Task<IActionResult> Edit(int id, Survey survey)
         {
             // Check if the survey exists
             var existingSurvey = await _context.Surveys.FirstOrDefaultAsync(s => s.Id == id);
@@ -165,34 +165,9 @@ namespace EnvironmentalProtectionSurvey.Controllers
             // Update the survey details
             existingSurvey.Title = survey.Title;
             existingSurvey.UserType = survey.UserType;
-            existingSurvey.UserPost = survey.UserPost;
-            existingSurvey.CreatedAt = DateTime.Now;
+
+            existingSurvey.CreatedAt = survey.CreatedAt;
             existingSurvey.EndAt = survey.EndAt;
-
-            // Update the questions
-            foreach (var question in questions)
-            {
-                var existingQuestion = existingSurvey.Questions.FirstOrDefault(q => q.Id == question.Id);
-                if (existingQuestion == null)
-                {
-                    existingQuestion = new Question();
-                    existingSurvey.Questions.Add(existingQuestion);
-                }
-                existingQuestion.Title = question.Title;
-                existingQuestion.CorrectAnswer = question.CorrectAnswer;
-
-                // Update the options
-                foreach (var option in question.Options)
-                {
-                    var existingOption = existingQuestion.Options.FirstOrDefault(o => o.Id == option.Id);
-                    if (existingOption == null)
-                    {
-                        existingOption = new Option();
-                        existingQuestion.Options.Add(existingOption);
-                    }
-                    existingOption.Title = option.Title;
-                }
-            }
 
             // Save changes to the database
             await _context.SaveChangesAsync();

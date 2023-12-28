@@ -206,8 +206,8 @@ namespace EnvironmentalProtectionSurvey.Controllers
                     return View(user);
                 }
 
-                user.Password = password;
-                _context.SaveChanges();
+                user.Password = BCrypt.Net.BCrypt.HashPassword(confirmPassword);
+                await _context.SaveChangesAsync();
 
                 TempData["successful"] = "Your password has been successfully changed.";
                 return RedirectToAction("Login");
@@ -251,10 +251,25 @@ namespace EnvironmentalProtectionSurvey.Controllers
                     smtpClient.Credentials = new NetworkCredential(_smtpUsername, _smtpPassword);
                     smtpClient.EnableSsl = true;
 
+                    string emailBody = $@"
+                            <html>
+                            <body>
+                                <p>Dear {model.UserName},</p>
+                                <p>We received a request to reset your password. Please click the link below to reset your password:</p>
+                                <p>Reset Password: https://localhost:7088/Users/VerifyEmailFogetPassword?token={token}</p>
+                                <p>If you did not request a password reset, please ignore this email.</p>
+                                <p>This link will expire in 15 minutes.</p>
+                                <p>Best regards,<br>YourAppName Team</p>
+                            </body>
+                            </html>
+                        ";
+
+
+
                     MailMessage mailMessage = new MailMessage(_smtpUsername, model.Email)
                     {
                         Subject = "Forget Password",
-                        Body = $"https://localhost:7088/Users/VerifyEmailFogetPassword?token={token}",
+                        Body = emailBody,
                         IsBodyHtml = true
                     };
 
@@ -308,8 +323,17 @@ namespace EnvironmentalProtectionSurvey.Controllers
                         return View(user);
                     }
 
-                    // Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
-                    user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                    if (IsPasswordValid(user.Password))
+                    {
+                        // Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
+                        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                    }
+                    else
+                    {
+                        ViewBag.Password = "Password must be at least 8 characters long and contain at least one uppercase letter, one digit, and one special character.";
+                        return View(user);
+
+                    }
 
                     // Kiểm tra NumberCode bắt đầu bằng "student" hoặc "teacher"
                     if (user.NumberCode == null || !(user.NumberCode.StartsWith("student", StringComparison.OrdinalIgnoreCase) || user.NumberCode.StartsWith("teacher", StringComparison.OrdinalIgnoreCase)))
@@ -339,9 +363,6 @@ namespace EnvironmentalProtectionSurvey.Controllers
                     user.Active = 2;
                     _context.Add(user);
                     await _context.SaveChangesAsync();
-
-
-
 
                     try
                     {
@@ -382,7 +403,7 @@ namespace EnvironmentalProtectionSurvey.Controllers
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
-            var model = _context.Users.FirstOrDefault(u => u.UserName == username);
+            var model = _context.Users.FirstOrDefault(u => u.UserName == username || u.Email == username);
             if (model != null && BCrypt.Net.BCrypt.Verify(password, model.Password))
             {
                 HttpContext.Session.SetString("username", model.UserName!.ToString());
@@ -609,7 +630,47 @@ namespace EnvironmentalProtectionSurvey.Controllers
             return View(new List<FilledSurvey>());
         }
 
-        public async Task<IActionResult> DetailsSurveyParticipationHistory(int surveyId)
+        //public async Task<IActionResult> DetailsSurveyParticipationHistory(int surveyId)
+        //{
+        //    var username = HttpContext.Session.GetString("username");
+
+        //    if (username != null)
+        //    {
+        //        var user = _context.Users.FirstOrDefault(u => u.UserName == username);
+
+        //        if (user != null)
+        //        {
+        //            var filledSurveyDetails = await (
+        //                from fs in _context.FilledSurveys
+        //                join o in _context.Options on fs.OptionId equals o.Id
+        //                join q in _context.Questions on o.QuestionId equals q.Id
+        //                join s in _context.Surveys on q.SurveyId equals s.Id
+        //                where fs.UserId == user.Id && fs.SurveyId == surveyId
+        //                select new FilledSurveyDetails
+        //                {
+        //                    QuestionId = q.Id,
+        //                    FilledSurvey = fs,
+        //                    SelectedOptions = _context.Options
+        //                        .Where(opt => opt.QuestionId == q.Id && opt.Id == fs.OptionId)
+        //                        .ToList(),
+        //                    Question = q,
+        //                    Survey = s
+        //                }
+        //            ).ToListAsync();
+
+        //            if (filledSurveyDetails == null)
+        //            {
+        //                return NotFound();
+        //            }
+
+        //            return View(filledSurveyDetails);
+        //        }
+        //    }
+
+        //    return NotFound();
+        //}
+
+        public IActionResult DetailsSurveyParticipationHistory(int surveyid)
         {
             var username = HttpContext.Session.GetString("username");
 
@@ -619,35 +680,33 @@ namespace EnvironmentalProtectionSurvey.Controllers
 
                 if (user != null)
                 {
-                    var filledSurveyDetails = await (
-                        from fs in _context.FilledSurveys
-                        join o in _context.Options on fs.OptionId equals o.Id
-                        join q in _context.Questions on o.QuestionId equals q.Id
-                        join s in _context.Surveys on q.SurveyId equals s.Id
-                        where fs.UserId == user.Id && fs.SurveyId == surveyId
-                        select new FilledSurveyDetails
-                        {
-                            QuestionId = q.Id,
-                            FilledSurvey = fs,
-                            SelectedOptions = _context.Options
-                                .Where(opt => opt.QuestionId == q.Id && opt.Id == fs.OptionId)
-                                .ToList(),
-                            Question = q,
-                            Survey = s
-                        }
-                    ).ToListAsync();
 
-                    if (filledSurveyDetails == null)
-                    {
-                        return NotFound();
-                    }
+                    //var filledSurveyDetails = _context.FilledSurveyDetails
+                    //    .Where(fs => fs.UserId == user.Id && fs.Id == surveyid)
+                    //    //.DistinctBy(fs => fs.QuestionTitle)  // Group by QuestionTitle
+                    //    //.Select(fs => new List<dynamic>{ fs.QuestionTitle!, fs.OptionTitle! })   // Take the first item from each group (remove duplicates)
+                    //    .ToList();
 
-                    return View(filledSurveyDetails);
+
+               //     var filledSurveyDetails = _context.FilledSurveyDetails
+               //.Where(fs => fs.UserId == user.Id && fs.Id == surveyid)
+               //.GroupBy(fs => new { fs.QuestionTitle, fs.OptionTitle })  // Group by QuestionTitle and OptionTitle
+               //.Select(group => group.First())   // Take the first item from each group (remove duplicates)
+               //.ToList();
+
+                    //if (filledSurveyDetails == null)
+                    //{
+                    //    return NotFound();
+                    //}
+
+                    //return View(filledSurveyDetails);
                 }
             }
 
             return NotFound();
         }
+
+
         private bool UserExists(int id)
         {
             return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();

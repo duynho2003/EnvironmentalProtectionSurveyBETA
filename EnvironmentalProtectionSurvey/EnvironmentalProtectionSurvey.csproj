@@ -12,6 +12,22 @@
 
   <ItemGroup>
     <None Include="Views\Users\htmlpage.cshtml" />
+    <None Include="wwwroot\newspaper\fonts\classy.svg" />
+    <None Include="wwwroot\newspaper\fonts\fontawesome-webfont.svg" />
+    <None Include="wwwroot\newspaper\fonts\fontawesome-webfont.woff2" />
+    <None Include="wwwroot\newspaper\fonts\icomoon.svg" />
+    <None Include="wwwroot\newspaper\js\active.js" />
+    <None Include="wwwroot\newspaper\js\bootstrap\bootstrap.min.js" />
+    <None Include="wwwroot\newspaper\js\bootstrap\popper.min.js" />
+    <None Include="wwwroot\newspaper\js\google-map\map-active.js" />
+    <None Include="wwwroot\newspaper\js\jquery\jquery-2.2.4.min.js" />
+    <None Include="wwwroot\newspaper\js\plugins\plugins.js" />
+    <None Include="wwwroot\newspaper\scss\style.scss" />
+    <None Include="wwwroot\newspaper\scss\_fonts.scss" />
+    <None Include="wwwroot\newspaper\scss\_mixin.scss" />
+    <None Include="wwwroot\newspaper\scss\_responsive.scss" />
+    <None Include="wwwroot\newspaper\scss\_theme_color.scss" />
+    <None Include="wwwroot\newspaper\style.css.map" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,7 +50,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Contests\" />
     <Folder Include="wwwroot\Images\" />
   </ItemGroup>
 
