@@ -21,6 +21,8 @@ public partial class SurveyProjectContext : DbContext
 
     public virtual DbSet<Faq> Faqs { get; set; }
 
+    public virtual DbSet<FilledContest> FilledContests { get; set; }
+
     public virtual DbSet<FilledSurvey> FilledSurveys { get; set; }
 
     public virtual DbSet<ForgotPassword> ForgotPasswords { get; set; }
@@ -44,7 +46,6 @@ public partial class SurveyProjectContext : DbContext
     public virtual DbSet<Winner> Winners { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("server=LAPTOP-PH1AFEK8\\SQLEXPRESS;database=SurveyProject;uid=sa;pwd=123;TrustServerCertificate=true");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -93,6 +94,21 @@ public partial class SurveyProjectContext : DbContext
                 .IsUnicode(false);
         });
 
+        modelBuilder.Entity<FilledContest>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__FilledCo__3214EC07459A1AC7");
+
+            entity.ToTable("FilledContest");
+
+            entity.HasOne(d => d.Contest).WithMany(p => p.FilledContests)
+                .HasForeignKey(d => d.ContestId)
+                .HasConstraintName("FK__FilledCon__Conte__4F47C5E3");
+
+            entity.HasOne(d => d.User).WithMany(p => p.FilledContests)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK__FilledCon__UserI__503BEA1C");
+        });
+
         modelBuilder.Entity<FilledSurvey>(entity =>
         {
             entity.ToTable("FilledSurvey");
@@ -136,9 +152,7 @@ public partial class SurveyProjectContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__News__3214EC0707259BE4");
 
-            entity.Property(e => e.Content)
-                .HasMaxLength(5000)
-                .IsUnicode(false);
+            entity.Property(e => e.Content).HasColumnType("text");
             entity.Property(e => e.Image)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -153,9 +167,6 @@ public partial class SurveyProjectContext : DbContext
 
             entity.ToTable("Option");
 
-            //entity.Property(e => e.Answer)
-            //    .HasMaxLength(255)
-            //    .IsUnicode(false);
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -208,7 +219,6 @@ public partial class SurveyProjectContext : DbContext
             entity.ToTable("QuestionContest");
 
             entity.Property(e => e.CorrectAnswer).HasMaxLength(255);
-
             // Sử dụng một chuỗi để lưu trữ các lựa chọn, phân tách bằng dấu phẩy
             entity.Property(e => e.AnswerOptions)
             .IsRequired()
@@ -217,7 +227,6 @@ public partial class SurveyProjectContext : DbContext
                 v => string.Join(',', v),
                 v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
             );
-
             entity.HasOne(d => d.Contest).WithMany(p => p.QuestionContests)
                 .HasForeignKey(d => d.ContestId)
                 .OnDelete(DeleteBehavior.Cascade)
@@ -230,10 +239,10 @@ public partial class SurveyProjectContext : DbContext
 
             entity.ToTable("Support");
 
-            entity.Property(e => e.Name)
+            entity.Property(e => e.Email)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.Email)
+            entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.TextMessage)

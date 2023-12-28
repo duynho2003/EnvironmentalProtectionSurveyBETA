@@ -21,6 +21,8 @@ public partial class Project2Context : DbContext
 
     public virtual DbSet<Faq> Faqs { get; set; }
 
+    public virtual DbSet<FilledContest> FilledContests { get; set; }
+
     public virtual DbSet<FilledSurvey> FilledSurveys { get; set; }
 
     public virtual DbSet<ForgotPassword> ForgotPasswords { get; set; }
@@ -50,7 +52,7 @@ public partial class Project2Context : DbContext
     {
         modelBuilder.Entity<Award>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Award__3214EC073ECE19AD");
+            entity.HasKey(e => e.Id).HasName("PK__Award__3214EC07FFA5B69C");
 
             entity.ToTable("Award");
 
@@ -60,16 +62,16 @@ public partial class Project2Context : DbContext
 
             entity.HasOne(d => d.Survey).WithMany(p => p.Awards)
                 .HasForeignKey(d => d.SurveyId)
-                .HasConstraintName("FK__Award__SurveyId__4F7CD00D");
+                .HasConstraintName("FK__Award__SurveyId__619B8048");
 
             entity.HasOne(d => d.User).WithMany(p => p.Awards)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Award__UserId__5070F446");
+                .HasConstraintName("FK__Award__UserId__628FA481");
         });
 
         modelBuilder.Entity<Contest>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Contest__3214EC07A1FF4B3B");
+            entity.HasKey(e => e.Id).HasName("PK__Contest__3214EC0764BDAEA2");
 
             entity.ToTable("Contest");
 
@@ -80,7 +82,7 @@ public partial class Project2Context : DbContext
 
         modelBuilder.Entity<Faq>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__FAQ__3214EC07CB020707");
+            entity.HasKey(e => e.Id).HasName("PK__FAQ__3214EC07797CA2EB");
 
             entity.ToTable("FAQ");
 
@@ -92,30 +94,46 @@ public partial class Project2Context : DbContext
                 .IsUnicode(false);
         });
 
-            modelBuilder.Entity<FilledSurvey>(entity =>
-            {
-                entity.ToTable("FilledSurvey");
+        modelBuilder.Entity<FilledContest>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__FilledCo__3214EC07459A1AC7");
 
-                entity.Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasColumnName("Created_At");
+            entity.ToTable("FilledContest");
 
-                entity.HasOne(d => d.Option).WithMany(p => p.FilledSurveys)
-                    .HasForeignKey(d => d.OptionId)
-                    .HasConstraintName("FK__FilledSur__Optio__4AB81AF0");
+            entity.HasOne(d => d.Contest).WithMany(p => p.FilledContests)
+                .HasForeignKey(d => d.ContestId)
+                .HasConstraintName("FK__FilledCon__Conte__4F47C5E3");
 
-                entity.HasOne(d => d.Survey).WithMany(p => p.FilledSurveys)
-                    .HasForeignKey(d => d.SurveyId)
-                    .HasConstraintName("FK__FilledSur__Surve__49C3F6B7");
+            entity.HasOne(d => d.User).WithMany(p => p.FilledContests)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK__FilledCon__UserI__503BEA1C");
+        });
 
-                entity.HasOne(d => d.User).WithMany(p => p.FilledSurveys)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__FilledSur__UserI__48CFD27E");
-            });
+        modelBuilder.Entity<FilledSurvey>(entity =>
+        {
+            entity.ToTable("FilledSurvey");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("Created_At");
+
+            entity.HasOne(d => d.Option).WithMany(p => p.FilledSurveys)
+                .HasForeignKey(d => d.OptionId)
+                .HasConstraintName("FK__FilledSur__Optio__5CD6CB2B");
+
+            entity.HasOne(d => d.Survey).WithMany(p => p.FilledSurveys)
+                .HasForeignKey(d => d.SurveyId)
+                .HasConstraintName("FK__FilledSur__Surve__5BE2A6F2");
+
+            entity.HasOne(d => d.User).WithMany(p => p.FilledSurveys)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK__FilledSur__UserI__5AEE82B9");
+        });
 
         modelBuilder.Entity<ForgotPassword>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ForgotPa__3214EC07B5C0C8EC");
+            entity.HasKey(e => e.Id).HasName("PK__ForgotPa__3214EC073ED07446");
 
             entity.ToTable("ForgotPassword");
 
@@ -127,15 +145,14 @@ public partial class Project2Context : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.ForgotPasswords)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__ForgotPas__IsUse__3E52440B");
+                .HasConstraintName("FK__ForgotPas__IsUse__5070F446");
         });
 
         modelBuilder.Entity<News>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__News__3214EC07BD88928C");
+            entity.HasKey(e => e.Id).HasName("PK__News__3214EC0707259BE4");
 
-            entity.Property(e => e.Content)
-                .IsUnicode(false);
+            entity.Property(e => e.Content).HasColumnType("text");
             entity.Property(e => e.Image)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -144,24 +161,25 @@ public partial class Project2Context : DbContext
                 .IsUnicode(false);
         });
 
-            modelBuilder.Entity<Option>(entity =>
-            {
-                entity.HasKey(e => e.Id).HasName("PK__Option__3214EC07856D4798");
+        modelBuilder.Entity<Option>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Option__3214EC0775B83A36");
 
-                entity.ToTable("Option");
+            entity.ToTable("Option");
 
-                entity.Property(e => e.Title)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
+            entity.Property(e => e.Title)
+                .HasMaxLength(255)
+                .IsUnicode(false);
 
-                entity.HasOne(d => d.Question).WithMany(p => p.Options)
-                    .HasForeignKey(d => d.QuestionId)
-                    .HasConstraintName("FK__Option__Question__46E78A0C");
-            });
+            entity.HasOne(d => d.Question).WithMany(p => p.Options)
+                .HasForeignKey(d => d.QuestionId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__Option__Question__59063A47");
+        });
 
         modelBuilder.Entity<PasswordReset>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Password__3214EC0741622D9A");
+            entity.HasKey(e => e.Id).HasName("PK__Password__3214EC078571871D");
 
             entity.ToTable("PasswordReset");
 
@@ -172,12 +190,12 @@ public partial class Project2Context : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.PasswordResets)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__PasswordR__Expir__3A81B327");
+                .HasConstraintName("FK__PasswordR__Expir__4CA06362");
         });
 
         modelBuilder.Entity<Question>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC07AEB4CE29");
+            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC0766EF2ED5");
 
             entity.ToTable("Question");
 
@@ -190,12 +208,13 @@ public partial class Project2Context : DbContext
 
             entity.HasOne(d => d.Survey).WithMany(p => p.Questions)
                 .HasForeignKey(d => d.SurveyId)
-                .HasConstraintName("FK__Question__Survey__440B1D61");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__Question__Survey__5629CD9C");
         });
 
         modelBuilder.Entity<QuestionContest>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC0721B609D4");
+            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC07E40A4E56");
 
             entity.ToTable("QuestionContest");
 
@@ -210,19 +229,20 @@ public partial class Project2Context : DbContext
             );
             entity.HasOne(d => d.Contest).WithMany(p => p.QuestionContests)
                 .HasForeignKey(d => d.ContestId)
-                .HasConstraintName("FK__QuestionC__Conte__06CD04F7");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__QuestionC__Conte__04E4BC85");
         });
 
         modelBuilder.Entity<Support>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Support__3214EC0735FB0AE2");
+            entity.HasKey(e => e.Id).HasName("PK__Support__3214EC079B64E75E");
 
             entity.ToTable("Support");
 
-            entity.Property(e => e.Name)
+            entity.Property(e => e.Email)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.Email)
+            entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.TextMessage)
@@ -232,7 +252,7 @@ public partial class Project2Context : DbContext
 
         modelBuilder.Entity<Survey>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Survey__3214EC0746BD3F51");
+            entity.HasKey(e => e.Id).HasName("PK__Survey__3214EC079802BCED");
 
             entity.ToTable("Survey");
 
@@ -256,7 +276,7 @@ public partial class Project2Context : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__User__3214EC0778F683F7");
+            entity.HasKey(e => e.Id).HasName("PK__User__3214EC07B0CBA98A");
 
             entity.ToTable("User");
 
@@ -294,17 +314,17 @@ public partial class Project2Context : DbContext
 
         modelBuilder.Entity<Winner>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Winner__3214EC075BD78EE1");
+            entity.HasKey(e => e.Id).HasName("PK__Winner__3214EC0749017F20");
 
             entity.ToTable("Winner");
 
             entity.HasOne(d => d.Contest).WithMany(p => p.Winners)
                 .HasForeignKey(d => d.ContestId)
-                .HasConstraintName("FK__Winner__ContestI__09A971A2");
+                .HasConstraintName("FK__Winner__ContestI__07C12930");
 
             entity.HasOne(d => d.User).WithMany(p => p.Winners)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Winner__UserId__0A9D95DB");
+                .HasConstraintName("FK__Winner__UserId__08B54D69");
         });
 
         OnModelCreatingPartial(modelBuilder);

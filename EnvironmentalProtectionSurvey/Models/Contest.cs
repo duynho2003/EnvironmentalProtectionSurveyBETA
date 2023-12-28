@@ -15,6 +15,8 @@ public partial class Contest
 
     public bool? IsVisible { get; set; }
 
+    public virtual ICollection<FilledContest> FilledContests { get; set; } = new List<FilledContest>();
+
     public virtual ICollection<QuestionContest> QuestionContests { get; set; } = new List<QuestionContest>();
 
     public virtual ICollection<Winner> Winners { get; set; } = new List<Winner>();
