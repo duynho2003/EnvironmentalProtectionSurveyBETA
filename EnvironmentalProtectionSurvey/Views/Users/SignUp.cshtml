@@ -8,7 +8,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 	<!-- Custom Theme files -->
-    <link href="~/css/user/signup.css" rel="stylesheet" />
+	<link href="~/css/user/signup.css" rel="stylesheet" />
 	<!-- //Custom Theme files -->
 	<!-- web font -->
 	<link href="//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i" rel="stylesheet">
@@ -21,32 +21,46 @@
 		<div class="main-agileinfo">
 			<div class="agileits-top">
 				<form asp-action="SignUp" method="post">
-					<input asp-for="UserName" class="text" type="text" placeholder="Username" required="">
+					<label style="color:white;">Enter Your Username</label>
+					<br />
 					<span asp-validation-for="UserName" class="text-danger"></span>
 					<span style="color:red">@ViewBag.errUsername</span>
+					<input asp-for="UserName" class="text" type="text">
 
 
-					<input asp-for="Password" class="text" type="password" placeholder="Password" required="">
+					<br />
+
+					<label style="color:white;">Enter Your Password</label>
+					<br />
 					<span asp-validation-for="Password" class="text-danger"></span>
+					<span style="color:red">@ViewBag.Password</span>
+					<input asp-for="Password" class="text" type="password">
 
 
-					<input class="text w3lpass" type="password" name="confirmPassword" placeholder="Confirm Password" required="">
+					<label style="color:white;">Enter Confirm Password</label>
+					<br />
 					<span style="color:red">@ViewBag.confirmPassword</span>
+					<input class="text w3lpass" type="password" name="confirmPassword">
 
 
-					<input asp-for="NumberCode" class="text" type="text" placeholder="NumberCode" required="">
+					<label style="color:white;">Enter Your NumberCode</label>
+					<br />
 					<span asp-validation-for="NumberCode" class="text-danger"></span>
 					<span style="color:red">@ViewBag.errNumberCode</span>
+					<input asp-for="NumberCode" class="text" type="text">
 
 
-					<input asp-for="Email" class="text email" type="email" placeholder="Email" required="">
+					<label style="color:white;">Enter Your Email</label>
+					<br />
 					<span asp-validation-for="Email" class="text-danger"></span>
 					<span style="color:red">@ViewBag.errEmail</span>
+					<input asp-for="Email" class="text email" type="text">
 
 
-					<input asp-for="Class" class="text" type="text" placeholder="Class/Department" required="">
+					<label style="color:white;">Enter Your Class/Department</label>
+					<input asp-for="Class" class="text" type="text" placeholder="Class/Department">
 
-				@*	<input asp-for="Specification" class="text" type="text" placeholder="Specification" required="">
+					@*	<input asp-for="Specification" class="text" type="text" placeholder="Specification" required="">
 
 					<input asp-for="Section" class="text" type="text" placeholder="Section" required="">*@
 
@@ -74,7 +88,7 @@
 		<li></li>
 		<li></li>
 	</ul>
-	
+
 	<!-- //main -->
 </body>
 </html>
