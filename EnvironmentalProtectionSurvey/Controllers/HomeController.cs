@@ -73,7 +73,23 @@ namespace EnvironmentalProtectionSurvey.Controllers
             };
             return View(viewModel);
         }
-
+        public IActionResult Supports()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Supports([Bind("Id,Name,Email,TextMessage")] Support support)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(support);
+                await _context.SaveChangesAsync();
+                // Display success alert using SweetAlert2
+                return Json(new { success = true });
+            }
+            return View(support);
+        }
 
         public IActionResult TakeSurvey(int id )
         {

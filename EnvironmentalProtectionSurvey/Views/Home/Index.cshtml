@@ -33,9 +33,9 @@
             <nav id="mainav" class="fl_right">
                 <!-- ################################################################################################ -->
                 <ul class="clear">
-                    <li class="active"><a asp-action="" asp-controller="Home">Home</a></li>
+                    <li class="active"><a asp-action="Index" asp-controller="Home">Home</a></li>
                     <li class="active"><a asp-action="SurveyBoard" asp-controller="Home">Survey Board</a></li>
-                    <li class="active"><a asp-action="" asp-controller="Home">Support</a></li>
+                    <li class="active"><a asp-action="Supports" asp-controller="Home">Support</a></li>
                     <li class="active"><a asp-action="Faqs" asp-controller="Home">FAQs</a></li>
                    
 
@@ -230,8 +230,8 @@
                 <h6 class="heading">Overview</h6>
                 <ul class="nospace linklist">
                     <li><a asp-action="Index" asp-controller="Home">Home</a></li>
-                    <li><a href="#">Survey Board</a></li>
-                    <li><a href="#">Support</a></li>
+                    <li><a asp-action="SurveyBoard" asp-controller="Home">Survey Board</a></li>
+                    <li><a asp-action="Supports" asp-controller="Home">Support</a></li>
                     <li><a asp-action="Faqs" asp-controller="Home">FAQs</a></li>
                 </ul>
             </div>

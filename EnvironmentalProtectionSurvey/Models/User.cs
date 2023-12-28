@@ -39,7 +39,5 @@ public partial class User
 
     public virtual ICollection<PasswordReset> PasswordResets { get; set; } = new List<PasswordReset>();
 
-    public virtual ICollection<Support> Supports { get; set; } = new List<Support>();
-
     public virtual ICollection<Winner> Winners { get; set; } = new List<Winner>();
 }

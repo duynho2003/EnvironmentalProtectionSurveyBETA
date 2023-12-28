@@ -233,19 +233,12 @@ public partial class SurveyProjectContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.PhoneNumber)
+            entity.Property(e => e.Email)
                 .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Reply)
-                .HasMaxLength(5000)
                 .IsUnicode(false);
             entity.Property(e => e.TextMessage)
                 .HasMaxLength(5000)
                 .IsUnicode(false);
-
-            entity.HasOne(d => d.User).WithMany(p => p.Supports)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Support__UserId__6754599E");
         });
 
         modelBuilder.Entity<Survey>(entity =>
