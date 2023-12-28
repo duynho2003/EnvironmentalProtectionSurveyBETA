@@ -184,8 +184,9 @@ namespace EnvironmentalProtectionSurvey.Controllers
 
         public IActionResult TakeContest(int id)
         {
-            var FilledContest = _context.Winners.FirstOrDefault(f => f.ContestId == id);
-            if (FilledContest == null)
+            var Winner = _context.Winners.FirstOrDefault(f => f.ContestId == id);
+            var FilledContest = _context.FilledContests.FirstOrDefault(f => f.ContestId == id);
+            if (FilledContest == null && Winner == null)
             {
                 var contest = _context.Contests
                 .Include(c => c.QuestionContests)
@@ -230,7 +231,7 @@ namespace EnvironmentalProtectionSurvey.Controllers
                 return View("Closed", contest);
             }
 
-            var results = new List<ResultViewModel>(); // Create a list to store results
+            bool allAnswersCorrect = true;
 
             foreach (var question in contest.QuestionContests)
             {
@@ -243,31 +244,57 @@ namespace EnvironmentalProtectionSurvey.Controllers
                     // So sánh câu trả lời đã chọn với câu trả lời đúng của câu hỏi
                     bool isCorrect = selectedOptionsForQuestion != null && selectedOptionsForQuestion.Contains(correctAnswer);
 
-                    // Add result to the list
-                    results.Add(new ResultViewModel
+                    // Nếu có ít nhất một câu trả lời sai, đặt allAnswersCorrect thành false
+                    if (!isCorrect)
                     {
-                        QuestionText = question.QuestionText,
-                        UserAnswer = selectedOptionsForQuestion != null ? string.Join(", ", selectedOptionsForQuestion) : "No answer",
-                        IsCorrect = isCorrect
-                    });
+                        allAnswersCorrect = false;
+
+                        // Lưu vào bảng FilledContest khi có ít nhất một câu trả lời sai
+                        var filledContest = new FilledContest
+                        {
+                            ContestId = contest.Id,
+                            UserId = user!.Id
+                            // Các thông tin khác cần lưu vào FilledContest
+                        };
+                        _context.FilledContests.Add(filledContest);
+                        _context.SaveChanges();
+                        ; // Thoát vòng lặp vì đã có câu trả lời sai
+                        return RedirectToAction("Lose", "Contests");
+
+                    }
                 }
             }
-            // Nếu không có câu trả lời nào được chọn hoặc không có câu trả lời nào đúng
-            //return View(contest);
-            // Pass the results to the Result view
-            foreach (var item in selectedOptions)
+
+            // Nếu tất cả câu trả lời đều đúng, lưu vào bảng Winners
+            if (allAnswersCorrect)
             {
-                var filledcontest = new Winner
+                var winner = new Winner
                 {
                     ContestId = contest.Id,
                     UserId = user.Id
+                    // Các thông tin khác cần lưu vào Winner
                 };
-                _context.Winners.Add(filledcontest);
+                _context.Winners.Add(winner);
                 _context.SaveChanges();
+                return RedirectToAction("Winner", "Contests");
+
             }
-            return View("Result", results);
+
+            // Tiếp tục xử lý logic lưu kết quả cuộc thi
+            // ...
+            return View();
+            // Chuyển hướng đến trang kết quả
         }
 
+        public IActionResult Lose()
+        {
+            return View();
+        }
+
+        public IActionResult Winner()
+        {
+            return View();
+        }
         private bool ContestExists(int id)
         {
             return (_context.Contests?.Any(e => e.Id == id)).GetValueOrDefault();
