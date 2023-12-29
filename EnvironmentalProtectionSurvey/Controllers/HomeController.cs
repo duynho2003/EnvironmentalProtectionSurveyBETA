@@ -24,6 +24,7 @@ namespace EnvironmentalProtectionSurvey.Controllers
             var contests = _context.Contests
                 .Where(c => c.StartTime <= currentDate && c.EndTime >= currentDate)
                 .OrderByDescending(c => c.Id)
+                .Take(3)
                 .ToList();
             List<Survey> survey;
             if (user == null)
@@ -32,6 +33,7 @@ namespace EnvironmentalProtectionSurvey.Controllers
                 survey = _context.Surveys
                     .Where(s => s.IsVisible == null && s.CreatedAt <= currentDate && (s.EndAt == null || s.EndAt >= currentDate))
                     .OrderByDescending(s => s.Id)
+                    .Take(3)
                     .Include(s => s.Questions)
                         .ThenInclude(q => q.Options)
                     .ToList();
@@ -42,6 +44,7 @@ namespace EnvironmentalProtectionSurvey.Controllers
                 survey = _context.Surveys
                     .Where(s => s.IsVisible == null && s.CreatedAt <= currentDate && (s.EndAt == null || s.EndAt >= currentDate))
                     .OrderByDescending(s => s.Id)
+                    .Take(3)
                     .Include(s => s.Questions)
                     .ThenInclude(q => q.Options)
                     .ToList();
@@ -52,6 +55,7 @@ namespace EnvironmentalProtectionSurvey.Controllers
                 survey = _context.Surveys
                     .Where(s => s.IsVisible == null && s.UserType == user!.Role || s.UserType == "All" && s.CreatedAt <= currentDate && (s.EndAt == null || s.EndAt >= currentDate))
                     .OrderByDescending(s => s.Id)
+                    .Take(3)
                     .Include(s => s.Questions)
                         .ThenInclude(q => q.Options)
                     .ToList();
@@ -268,8 +272,14 @@ namespace EnvironmentalProtectionSurvey.Controllers
                 _context.FilledSurveys.Add(FilledSurvey);
                 _context.SaveChanges();
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Thanks");
         }
+
+        public IActionResult Thanks()
+        {
+            return View();
+        }
+
         // GET: Faqs
         public async Task<IActionResult> Faqs()
         {
